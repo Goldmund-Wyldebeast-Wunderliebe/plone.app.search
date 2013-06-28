@@ -90,6 +90,7 @@
             <div id="search-results-wrapper"
                  class="cell width-full position-0"
                  tal:define="b_start python:0;
+                             isAnon context/@@plone_portal_state/anonymous;
                              b_start request/b_start | b_start;
                              batch python: view.results(b_start=b_start);
                              normalizeString nocall:context/@@plone/normalizeString;">
@@ -218,6 +219,32 @@
                                       </tal:datetime>
 
                                       <input type="hidden" name="created.range:record" value="min" />
+                                  </div>
+
+                                  <div class="formControls" tal:condition='isAnon'>
+                                      <input class="searchPage searchButton allowMultiSubmit"
+                                             type="submit"
+                                             value="Search"
+                                             i18n:attributes="value label_search;"/>
+                                  </div>
+
+                                  <div class="visualClear"><!-- --></div>
+                              </fieldset>
+                               <fieldset class="noborder" tal:condition='not: isAnon'>
+
+                                  <legend i18n:translate="author_only">Zoek alleen op auteur</legend>
+
+                                  <div class="field">
+
+                                      <div class="formHelp"></div>
+                                          <input type="checkbox"
+                                                 onchange=""
+                                                 name="creator"
+                                                 value="#"
+                                                 id="creator"
+                                                 class="noborder"
+                                                 tal:attributes="checked python:request.get('created', '');"/>
+                                          <label for="creator" i18n:translate="">Zoek op auteur</label>
                                   </div>
 
                                   <div class="formControls">

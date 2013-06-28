@@ -79,8 +79,15 @@ class Search(BrowserView):
         for k, v in request.form.items():
             if v and ((k in valid_keys) or k.startswith('facet.')):
                 query[k] = v
-        if text:
+
+        creator = request.form.get('creator')
+
+        if text and not creator:
             query['SearchableText'] = quote_chars(text)
+        elif text and creator:
+            query['Creator'] = quote_chars(text)
+            if 'SearchableText' in query:
+                del query['SearchableText']
 
         # don't filter on created at all if we want all results
         created = query.get('created')
@@ -99,7 +106,6 @@ class Search(BrowserView):
         # respect navigation root
         if 'path' not in query:
             query['path'] = getNavigationRoot(self.context)
-
         return query
 
     def filter_types(self, types):
